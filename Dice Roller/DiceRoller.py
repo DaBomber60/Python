@@ -1,4 +1,4 @@
-'''THis application will simulate rolling dice in DND, using standard notation.
+'''This application will simulate rolling dice in DND, using standard notation.
 That is to say, it will ask "what do you want to roll", and user can enter 1d20+4 for example
 the system will then attempt to simulate a 20 sided die being rolled, and then add the appropriate value.
 
@@ -7,18 +7,19 @@ Eventually this will be used as the behind the scenes for a GUI based dice rolle
 Author: Jye Horan
 Written for Python 3.7'''
 
+'''Changelog: Version 1.2, added the ability to subtract after the roll, and edited the messages sent back to adapt to this change.'''
+
 from random import randint
 import os
 from time import sleep
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
+
 integers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"]
 letters = ["d"]
-functions = ["+"]
+functions = ["+", "-"]
 dice = ["4", "6", "8", "10", "12", "20", "100"]
 legalCharacters = integers + letters + functions
-
-invalid = "This is an invalid roll, press enter to try again..."
 
 multi = 1
 die = 0
@@ -28,6 +29,9 @@ reroll = False
 rollTotal = 0
 totalRollList = []
 rollList = []
+functionWord = ""
+bonusPenalty = ""
+modifierAbsolute = 0
 
 def roller(die):
 	roll = randint(1, die)
@@ -57,7 +61,7 @@ def inputGetDie(text):
 		if text[i] not in legalCharacters:
 			inputClean = False
 			break
-		elif text[i] in integers and "+" not in text:
+		elif text[i] in integers and "+" or "-" not in text:
 			test = text[int(i) - 1] + text[int(i)] + text[int(i) + 1]
 			testPrevious = text[int(i) - 2]
 			if test in dice and testPrevious == "d":
@@ -74,23 +78,25 @@ def inputGetDie(text):
 						die = int(test)
 		elif text[i] == "+":
 			break
-		elif text[i] in integers and "+" in text:
+		elif text[i] == "-":
+			break
+		elif text[i] in integers and "+" or "-" in text:
 			test = text[int(i) - 1] + text[int(i)] + text[int(i) + 1]
 			testNext = text[int(i) + 2]
 			testPrevious = text[int(i) - 2]
-			if test in dice and testNext == "+" and testPrevious == "d":
+			if test in dice and testNext == "+" or "-" and testPrevious == "d":
 				die = 100
 			else:
 				test = text[int(i) - 1] + text[int(i)]
 				testNext = text[int(i) + 1]
 				testPrevious = text[int(i) - 2]
-				if test in dice and testNext == "+" and testPrevious == "d":
+				if test in dice and testNext == "+" or "-" and testPrevious == "d":
 					die = int(test)
 				else:
 					test = text[int(i)]
 					testNext = text[int(i) + 1]
 					testPrevious = text[int(i) - 1]
-					if test in dice and testNext == "+" and testPrevious == "d":
+					if test in dice and testNext == "+" or "-" and testPrevious == "d":
 						die = int(test)
 	if die == 0:
 		inputClean = False
@@ -121,8 +127,8 @@ def inputGetModifier(text):
 	global modifier
 	modifierString = ""
 	text = text.lower()
-	beforePlusCount = 1
-	if "+" not in text:
+	beforeFunctionCount = 1
+	if "+" not in text and "-" not in text:
 		modifier = 0
 	else:
 		for i in range(len(text)):
@@ -131,32 +137,39 @@ def inputGetModifier(text):
 				break
 			elif text[i] == "+":
 				break
+			elif text[i] == "-":
+				break
 			else:
-				beforePlusCount += 1
-		if beforePlusCount == len(text):
+				beforeFunctionCount += 1
+		if beforeFunctionCount == len(text):
 			modifier = 0
 		else:
-			for i in range(beforePlusCount, len(text)):
+			for i in range(beforeFunctionCount, len(text)):
 				modifierString += text[i]
 			modifier = int(modifierString)
+	getModifierFunction(text)
 
 def inputSanitiser(text):
 	global inputClean
 	text = text.lower()
 	dCount = text.count("d")
 	plusCount = text.count("+")
-	beforePlusCount = 0
+	minusCount = text.count("-")
+	functionCount = plusCount + minusCount
+	beforeFunctionCount = 0
 	beforeDCount = 0
-	if "d" in text and dCount == 1 and plusCount <= 1:
-		if "+" in text:
+	if "d" in text and dCount == 1 and functionCount <= 1:
+		if "+" in text or "-" in text:
 			for i in range(len(text)):
 				if text[i] not in legalCharacters:
 					inputClean = False
 					break
 				elif text[i] == "+":
 					break
+				elif text[i] == "-":
+					break
 				else:
-					beforePlusCount += 1
+					beforeFunctionCount += 1
 			for i in range(len(text)):
 				if text[i] not in legalCharacters:
 					inputClean = False
@@ -165,7 +178,7 @@ def inputSanitiser(text):
 					break
 				else:
 					beforeDCount += 1
-			if beforeDCount > beforePlusCount or beforePlusCount - beforeDCount == 1:
+			if beforeDCount > beforeFunctionCount or beforeFunctionCount - beforeDCount == 1:
 				inputClean = False
 		else:
 			for i in range(len(text)):
@@ -252,8 +265,18 @@ def rollProcess():
 		sleep(.5)
 		print("Rolling...")
 		sleep(1)
-		print("The rolls were: " + ', '.join(rollList) + ".")
-		print("The total of your dice roll is " + str(score - modifier) + ", plus your bonus of " + str(modifier) + ", makes " + str(score) + "!")
+		if multi == 1 and modifier == 0:
+			print("Your die landed on " + ', '.join(rollList) + ".")
+		elif multi == 1:
+			print("Your die landed on " + ', '.join(rollList) + ".")
+		else:
+			print("The rolls were: " + ', '.join(rollList) + ".")
+		if multi == 1 and modifier == 0:
+			pass
+		elif modifier == 0:
+			print("The total of your dice roll is " + str(score) + "!")
+		else:
+			print("The total of your dice roll is " + str(score - modifier) + ", " + functionWord + " your " + bonusPenalty + " of " + str(modifierAbsolute) + ", makes " + str(score) + "!")
 		sleep(2)
 		requestRerollGoodRoll()
 	else:
@@ -271,20 +294,46 @@ def rollProcess():
 		input("Thank you for using Jye's dice roller, press enter to quit...")
 	
 def initialise():
-	global die
 	global multi
+	global die
 	global modifier
+	global inputClean
+	global reroll
+	global rollList
+	global functionWord
+	global bonusPenalty
+	global modifierAbsolute
 	multi = 1
 	die = 0
 	modifier = 0
+	inputClean = True
+	reroll = False
 	rollList = []
+	functionWord = ""
+	bonusPenalty = ""
+	modifierAbsolute = 0
 	
 def rollCheck(roll):
 	if inputClean == True:
 		inputGetDie(roll)
 		inputGetModifier(roll)
 		inputGetMulti(roll)
-
+		
+def getModifierFunction(text):
+	global modifier
+	global modifierAbsolute
+	global functionWord
+	global bonusPenalty
+	if "-" in text:
+		modifier *= (-1)
+		modifierAbsolute = abs(modifier)
+		functionWord = "minus"
+		bonusPenalty = "penalty"
+	elif "+" in text:
+		modifierAbsolute = abs(modifier)
+		functionWord = "plus"
+		bonusPenalty = "bonus"
+		
 rollProcess()
 
 '''#Junk lines used for testing
