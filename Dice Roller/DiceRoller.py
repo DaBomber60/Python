@@ -7,7 +7,10 @@ Eventually this will be used as the behind the scenes for a GUI based dice rolle
 Author: Jye Horan
 Written for Python 3.7'''
 
-'''Changelog: Version 1.2, added the ability to subtract after the roll, and edited the messages sent back to adapt to this change.'''
+'''Changelog:
+Version 1.2: added the ability to subtract after the roll, and edited the messages sent back to adapt to this change.
+Version 1.3: added in reactions to maximum and minimum roll values, as well as a secret 1% chance message on a single d20 crit hit/miss
+'''
 
 from random import randint
 import os
@@ -267,8 +270,52 @@ def rollProcess():
 		sleep(1)
 		if multi == 1 and modifier == 0:
 			print("Your die landed on " + ', '.join(rollList) + ".")
+			if die == 20:
+				if score == 1:
+					sleep(1)
+					print("Critical miss!")
+					sleep(1)
+				elif score == 20:
+					sleep(1)
+					print("Critical hit!")
+					sleep(1)
+			else:
+				if score == 1:
+					sleep(1)
+					print("Oof")
+					sleep(1)
+				elif score == die:
+					sleep(1)
+					print("Nice!")
+					sleep(1)
 		elif multi == 1:
 			print("Your die landed on " + ', '.join(rollList) + ".")
+			if die == 20:
+				if (score - modifier) == 1:
+					sleep(1)
+					print("Critical miss!")
+					luck = randint(0,100)
+					sleep(1)
+					if luck == 42:
+						print("I seriously hope that was an initiative roll...")
+						sleep(1)
+				elif (score - modifier) == 20:
+					sleep(1)
+					print("Critical hit!")
+					luck = randint(0,100)
+					sleep(1)
+					if luck == 42:
+						print("I seriously hope that wasn't wasted on an initiative roll...")
+						sleep(1)
+			else:
+				if (score - modifier) == 1:
+					sleep(1)
+					print("Oof")
+					sleep(1)
+				elif (score - modifier) == die:
+					sleep(1)
+					print("Nice!")
+					sleep(1)
 		else:
 			print("The rolls were: " + ', '.join(rollList) + ".")
 		if multi == 1 and modifier == 0:
