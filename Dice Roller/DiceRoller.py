@@ -24,6 +24,7 @@ letters = ["d"]
 functions = ["+", "-"]
 dice = ["4", "6", "8", "10", "12", "20", "100"]
 stopper = ["$"]
+help = ["?", "help", "--?"]
 legalCharacters = integers + letters + functions + stopper
 
 multi = 1
@@ -410,6 +411,10 @@ def getModifierFunction(text):
 		functionWord = "plus"
 		bonusPenalty = "bonus"
 		
+def helpText():
+	print("The legal inputs for this roller are:")
+	print("#d#
+
 rollProcess()
 
 '''#Junk lines used for testing
