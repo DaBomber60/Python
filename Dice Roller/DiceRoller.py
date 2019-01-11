@@ -24,7 +24,6 @@ letters = ["d"]
 functions = ["+", "-"]
 dice = ["4", "6", "8", "10", "12", "20", "100"]
 stopper = ["$"]
-help = ["?", "help", "--?"]
 legalCharacters = integers + letters + functions + stopper
 
 multi = 1
@@ -67,7 +66,7 @@ def inputGetDie(text):
 	global inputClean
 	global die
 	text = text.lower()
-	#Using a cool character for stoppers is to prevent people fucking with things: ยง
+	#Using a cool character for stoppers is to prevent people fucking with things: $
 	text = stopper[0] + text + stopper[0] + stopper[0] + stopper[0]
 	test = ""
 	testNext = ""
@@ -144,6 +143,7 @@ def inputGetModifier(text):
 	modifierString = ""
 	text = text.lower()
 	beforeFunctionCount = 1
+	#any(x in testPrevious for x in letters) <- modify this to make check in functions in text----------------------------------------------------------------
 	if "+" not in text and "-" not in text:
 		modifier = 0
 	else:
@@ -410,9 +410,6 @@ def getModifierFunction(text):
 		functionWord = "plus"
 		bonusPenalty = "bonus"
 		
-def helpText():
-	print("The legal inputs for this roller are:"
-
 rollProcess()
 
 '''#Junk lines used for testing
