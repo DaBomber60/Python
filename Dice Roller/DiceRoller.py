@@ -26,6 +26,8 @@ modifier = 0
 inputClean = True
 reroll = False
 rollTotal = 0
+totalRollList = []
+rollList = []
 
 def roller(die):
 	roll = randint(1, die)
@@ -34,7 +36,9 @@ def roller(die):
 def multiRoller(multi, die):
 	roll = 0
 	for i in range(multi):
-		roll += roller(die)
+		rolled = roller(die)
+		roll += rolled
+		rollList.append(str(rolled))
 	return roll
 
 def fullRoller(multi, die, modifier):
@@ -49,8 +53,6 @@ def inputGetDie(text):
 	test = ""
 	testNext = ""
 	testPrevious = ""
-	dCount = text.count("d")
-	plusCount = text.count("+")
 	for i in range(1, len(text) - 1):
 		if text[i] not in legalCharacters:
 			inputClean = False
@@ -98,8 +100,6 @@ def inputGetMulti(text):
 	global multi
 	multiString = ""
 	text = text.lower()
-	dCount = text.count("d")
-	plusCount = text.count("+")
 	beforeDCount = 0
 	for i in range(len(text)):
 		if text[i] not in legalCharacters:
@@ -121,8 +121,6 @@ def inputGetModifier(text):
 	global modifier
 	modifierString = ""
 	text = text.lower()
-	dCount = text.count("d")
-	plusCount = text.count("+")
 	beforePlusCount = 1
 	if "+" not in text:
 		modifier = 0
@@ -240,6 +238,7 @@ def requestRerollGoodRoll():
 
 def rollProcess():
 	global rollTotal
+	global totalRollList
 	initialise()
 	cls()
 	roll = requestRoll()
@@ -249,10 +248,12 @@ def rollProcess():
 	if inputClean == True:
 		score = fullRoller(multi, die, modifier)
 		rollTotal += score
+		totalRollList.append(str(roll) + " = " + str(score))
 		sleep(.5)
 		print("Rolling...")
 		sleep(1)
-		print("The total of your roll is " + str(score) + "!")
+		print("The rolls were: " + ', '.join(rollList) + ".")
+		print("The total of your dice roll is " + str(score - modifier) + ", plus your bonus of " + str(modifier) + ", makes " + str(score) + "!")
 		sleep(2)
 		requestRerollGoodRoll()
 	else:
@@ -261,6 +262,9 @@ def rollProcess():
 		rollProcess()
 	else:
 		print("Okay, have fun doing what you're doing!")
+		sleep(.5)
+		print("The list of all your rolls is:")
+		print(totalRollList)
 		sleep(.5)
 		print("The total of all your rolls was " + str(rollTotal) + ", I hope it served you well!")
 		sleep(1.5)
@@ -273,6 +277,7 @@ def initialise():
 	multi = 1
 	die = 0
 	modifier = 0
+	rollList = []
 	
 def rollCheck(roll):
 	if inputClean == True:

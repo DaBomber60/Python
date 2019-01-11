@@ -9,12 +9,13 @@ import os
 def cls():
     os.system('cls' if os.name=='nt' else 'clear')
 
-options = ['ROCK', 'PAPER', 'SCISSORS']
+options = ['ROCK', 'PAPER', 'SCISSORS', 'GUN']
 again = ['', 'Y', 'YE', 'YES', 'YEP', 'YEAH', 'N', 'NO', 'NOPE', 'NUH', 'GO AWAY']
 message = {
 	'tie': 'Yawn, it\'s a tie! Half a point each!',
 	'won': 'Lame! You won!',
-	'lost': 'AHAHAHAHAHAHA I WIN!'
+	'lost': 'AHAHAHAHAHAHA I WIN!',
+	'cheated': 'WHAT THE HELL MAN, I\'M OUT'
 }
 
 userScore = 0
@@ -24,13 +25,29 @@ def decideWinner(userChoice, computerChoice):
 	global userScore
 	global computerScore
 	time.sleep(0.5)
-	print('You threw %s.' % (userChoice))
-	time.sleep(0.5)
-	print('I threw %s.' % (computerChoice))
-	time.sleep(1)
-	if userChoice != options[1] and userChoice != options[0] and userChoice != options[2]:
+	if userChoice == options[3]:
+		print("You... shot bullets? OW OW OW OW OW")
+		time.sleep(0.5)
+	else:
+		print('You threw %s.' % (userChoice))
+		time.sleep(0.5)
+		print('I threw %s.' % (computerChoice))
+		time.sleep(1)
+	if userChoice != options[1] and userChoice != options[0] and userChoice != options[2] and userChoice != options[3]:
 		print('That wasn\'t a valid throw, try again')
 		playAgain()
+	elif userChoice == options[3]:
+		print(message['cheated'])
+		userScore = 9999
+		time.sleep(2)
+		cls()
+		print('The final score was:')
+		time.sleep(1)
+		print('You: %s' % str(userScore))
+		time.sleep(1)
+		print('Me: %s' % str(computerScore))
+		time.sleep(1)
+		print("You win! Well done!")
 	elif userChoice == computerChoice:
 		print(message['tie'])
 		userScore += 0.5
