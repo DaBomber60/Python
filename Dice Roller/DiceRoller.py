@@ -244,10 +244,8 @@ def rollProcess():
 	cls()
 	roll = requestRoll()
 	score = 0
-	inputGetDie(roll)
-	inputGetModifier(roll)
-	inputGetMulti(roll)
 	inputSanitiser(roll)
+	rollCheck(roll)
 	if inputClean == True:
 		score = fullRoller(multi, die, modifier)
 		rollTotal += score
@@ -275,6 +273,12 @@ def initialise():
 	multi = 1
 	die = 0
 	modifier = 0
+	
+def rollCheck(roll):
+	if inputClean == True:
+		inputGetDie(roll)
+		inputGetModifier(roll)
+		inputGetMulti(roll)
 
 rollProcess()
 
