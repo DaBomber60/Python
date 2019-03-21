@@ -427,5 +427,5 @@ print(inputClean)
 #print("Multi is", inputGetMulti(testRoll))
 #print("Modifier is", inputGetModifier(testRoll))
 #inputSanitiser(testRoll)
-#print(inputClean)
-input("Scipt has been run, press enter to close...")'''
+#print(inputClean)'''
+input("Scipt has been run, press enter to close...")
