@@ -5,7 +5,7 @@ The steps stop as soon as a single-digit number is reached.
 
 Written by Jye Horan, inspired by Matt Parker via a numberphile video!
 
-Version 1.0
+Version 1.1 - Made some slight changes to final output for clarity.
 '''
 
 import os
@@ -42,7 +42,7 @@ def findSmallest(n):
 		if len(numberList) == target:
 			targetHit = True
 			print(str(numberList))
-			print('This is the first instance of ' + str(len(numberList) - 1) + ' steps!')
+			print(str(numberList[0]) + ' is the smallest number that will cause ' + str(len(numberList) - 1) + ' steps!')
 		else:
 			testNumber = testNumber + 1
 
