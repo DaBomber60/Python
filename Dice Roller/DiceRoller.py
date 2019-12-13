@@ -411,9 +411,9 @@ def getModifierFunction(text):
 		functionWord = "plus"
 		bonusPenalty = "bonus"
 		
-def helpText():
+'''def helpText():
 	print("The legal inputs for this roller are:")
-	print("#d#
+	print("#d#'''
 
 rollProcess()
 
@@ -428,4 +428,3 @@ print(inputClean)
 #print("Modifier is", inputGetModifier(testRoll))
 #inputSanitiser(testRoll)
 #print(inputClean)'''
-input("Scipt has been run, press enter to close...")
