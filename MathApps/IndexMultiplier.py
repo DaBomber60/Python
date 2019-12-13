@@ -90,7 +90,7 @@ def stepTester():
 	findSteps(number)	
 
 def initial():
-	print('Would you like to find the smallest number for a target step count, or find the steps of a specific number?')
+	print('Would you like to find the smallest number for a target step count, or test the persistence of a specific number?')
 	test = input('Enter 1 for target steps, or 2 to choose a number to test: ')
 	if test == '1':
 		printanswer = input('Would you like to print the currently tested number? ')
