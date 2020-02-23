@@ -275,8 +275,8 @@ def rollProcess():
 	initialise()
 	cls()
 	roll = requestRoll()
-	if any(x in roll for x in help):
-		helpText()
+	# if any(x in roll for x in help):
+		# helpText()
 	score = 0
 	inputSanitiser(roll)
 	rollCheck(roll)
